@@ -24,7 +24,7 @@ create table tasks (
   status text not null default 'open'
     check (status in ('open','claimed','in_progress','blocked','review','done','archived')),
   owner_id uuid references profiles(id),
-  created_by uuid not null references profiles(id),
+  created_by uuid not null references profiles(id) on delete restrict,
   points integer not null default 10,
   difficulty text not null default 'medium'
     check (difficulty in ('easy','medium','hard')),
@@ -56,3 +56,10 @@ $$ language plpgsql;
 create trigger tasks_updated_at
   before update on tasks
   for each row execute function set_updated_at();
+
+-- Indexes for RLS policy performance and common queries
+create index on profiles(board_id);
+create index on tasks(board_id, status);
+create index on tasks(owner_id);
+create index on tasks(board_id, created_at desc);
+create index on point_events(board_id, user_id);

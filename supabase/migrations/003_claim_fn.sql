@@ -63,3 +63,7 @@ create or replace function increment_points(user_id uuid, amount integer)
 returns integer as $$
   update profiles set points = points + amount where id = user_id returning points;
 $$ language sql security definer;
+
+grant execute on function claim_task(uuid, uuid) to authenticated;
+grant execute on function release_task(uuid, uuid) to authenticated;
+grant execute on function increment_points(uuid, integer) to service_role;

@@ -25,6 +25,10 @@ create policy "users can insert own profile"
   on profiles for insert
   with check (id = auth.uid());
 
+create policy "users can read own profile"
+  on profiles for select
+  using (id = auth.uid());
+
 -- tasks: board members can read
 create policy "board members can read tasks"
   on tasks for select
