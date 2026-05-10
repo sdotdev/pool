@@ -16,7 +16,7 @@ export const getCurrentProfile = cache(async (): Promise<Profile> => {
     .eq('id', user.id)
     .single()
 
-  if (!profile) redirect('/join')
+  if (!profile || !profile.board_id) redirect('/join')
 
   return profile
 })
