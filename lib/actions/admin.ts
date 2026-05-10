@@ -50,6 +50,8 @@ export async function createBoard(name: string) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('unauthenticated')
 
+  if (!name?.trim()) throw new Error('invalid_board_name')
+
   // Check user has no board yet
   const { data: existing } = await supabase
     .from('profiles')
@@ -61,7 +63,7 @@ export async function createBoard(name: string) {
 
   const { data: board, error: boardError } = await supabase
     .from('boards')
-    .insert({ name })
+    .insert({ name: name.trim() })
     .select()
     .single()
 
