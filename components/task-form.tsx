@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition, useRef } from 'react'
+import { useTransition, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,6 +11,7 @@ import { createTask } from '@/lib/actions/tasks'
 export function TaskForm({ onDone }: { onDone?: () => void }) {
   const [pending, startTransition] = useTransition()
   const formRef = useRef<HTMLFormElement>(null)
+  const [difficulty, setDifficulty] = useState('medium')
 
   return (
     <form
@@ -35,7 +36,7 @@ export function TaskForm({ onDone }: { onDone?: () => void }) {
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
           <Label>Difficulty</Label>
-          <Select name="difficulty" defaultValue="medium">
+          <Select value={difficulty} onValueChange={setDifficulty}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="easy">Easy (5pts)</SelectItem>
@@ -43,6 +44,7 @@ export function TaskForm({ onDone }: { onDone?: () => void }) {
               <SelectItem value="hard">Hard (20pts)</SelectItem>
             </SelectContent>
           </Select>
+          <input type="hidden" name="difficulty" value={difficulty} />
         </div>
         <div className="space-y-1">
           <Label htmlFor="due_date">Due date</Label>
