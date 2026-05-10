@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx shadcn@latest add button badge card dialog input label textarea select avatar dropdown-menu separator --overwrite)",
+      "Bash(Select-String -Path \"app/globals.css\" -Pattern \"slate|sidebar|background|foreground\")",
+      "Bash(Select-Object -First 30)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(npm ls *)",
+      "Bash(npm audit *)",
+      "Bash(npm view *)",
+      "Bash(npx tsc *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Public\\\\_sites\\\\2026\\\\2026.15\\\\node_modules\\\\next\\\\dist\\\\docs\" -Filter \"*proxy*\" -Recurse -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "mcp__claude_ai_Supabase__list_organizations",
+      "mcp__claude_ai_Supabase__get_cost",
+      "mcp__claude_ai_Supabase__confirm_cost",
+      "mcp__claude_ai_Supabase__create_project",
+      "mcp__claude_ai_Supabase__get_project_url",
+      "mcp__claude_ai_Supabase__get_publishable_keys",
+      "mcp__claude_ai_Supabase__apply_migration"
+    ]
+  }
+}

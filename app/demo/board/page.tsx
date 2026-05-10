@@ -41,7 +41,9 @@ export default function DemoBoardPage() {
   }
 
   const poolTasks = tasks.filter(t => t.status === 'open')
-  const teamInProgress = tasks.filter(t => t.status === 'in_progress' && t.owner_id !== DEMO_PROFILE.id)
+  const teamInProgress = tasks.filter(t =>
+    ['claimed', 'in_progress', 'blocked', 'review'].includes(t.status) && t.owner_id !== DEMO_PROFILE.id
+  )
   const todoTasks = tasks.filter(t => t.status === 'claimed' && t.owner_id === DEMO_PROFILE.id)
   const doingTasks = tasks.filter(t => t.status === 'in_progress' && t.owner_id === DEMO_PROFILE.id)
   const reviewTasks = tasks.filter(t => t.status === 'review' && t.owner_id === DEMO_PROFILE.id)
