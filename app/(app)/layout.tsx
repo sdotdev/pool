@@ -4,7 +4,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Nav />
-      <main className="max-w-5xl mx-auto px-4 py-6">{children}</main>
+      <main className="px-4 py-6 overflow-x-auto">{children}</main>
     </>
   )
 }
