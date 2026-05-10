@@ -19,12 +19,13 @@ export async function GET(request: NextRequest) {
 
       if (!profile) {
         // New user — create profile stub, redirect to join
-        await supabase.from('profiles').insert({
+        const { error: insertError } = await supabase.from('profiles').insert({
           id: data.user.id,
           display_name: data.user.user_metadata?.full_name ?? null,
           avatar_url: data.user.user_metadata?.avatar_url ?? null,
           board_id: null,
         })
+        if (insertError) return NextResponse.redirect(`${origin}/auth?error=profile_failed`)
         return NextResponse.redirect(`${origin}/join`)
       }
 
