@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getCurrentProfile } from '@/lib/dal'
 import { TaskCard } from '@/components/task-card'
 import { TaskForm } from '@/components/task-form'
+import { BoardRealtime } from '@/components/board-realtime'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import type { TaskWithOwner } from '@/lib/types'
@@ -31,6 +32,7 @@ export default async function BoardPage() {
 
   return (
     <div className="space-y-6">
+      <BoardRealtime boardId={profile.board_id!} />
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Board</h1>
         {canCreate && (

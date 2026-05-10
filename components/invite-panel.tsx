@@ -8,6 +8,7 @@ import { rotateInviteToken } from '@/lib/actions/admin'
 export function InvitePanel({ inviteToken, appUrl }: { inviteToken: string; appUrl: string }) {
   const [token, setToken] = useState(inviteToken)
   const [copied, setCopied] = useState(false)
+  const [rotateError, setRotateError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
   const inviteUrl = `${appUrl}/join?token=${token}`
@@ -19,9 +20,14 @@ export function InvitePanel({ inviteToken, appUrl }: { inviteToken: string; appU
   }
 
   const rotate = () => {
+    setRotateError(null)
     startTransition(async () => {
-      const newToken = await rotateInviteToken()
-      if (newToken) setToken(newToken)
+      try {
+        const newToken = await rotateInviteToken()
+        if (newToken) setToken(newToken)
+      } catch {
+        setRotateError('Failed to rotate link. Please try again.')
+      }
     })
   }
 
@@ -36,6 +42,9 @@ export function InvitePanel({ inviteToken, appUrl }: { inviteToken: string; appU
       <Button size="sm" variant="ghost" onClick={rotate} disabled={pending}>
         {pending ? 'Rotating…' : 'Generate new link'}
       </Button>
+      {rotateError && (
+        <p className="text-xs text-destructive">{rotateError}</p>
+      )}
       <p className="text-xs text-muted-foreground">
         Anyone with this link can join the board. Rotate it to invalidate the old link.
       </p>
