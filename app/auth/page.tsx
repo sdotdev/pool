@@ -1,0 +1,30 @@
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
+export default async function AuthPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user) redirect('/board')
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl">Pool</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Sign in to access your team's task board.
+          </p>
+        </CardHeader>
+        <CardContent>
+          <form action="/auth/google" method="POST">
+            <Button type="submit" className="w-full">
+              Continue with Google
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}

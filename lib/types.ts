@@ -51,18 +51,36 @@ export interface TaskWithOwner extends Task {
   creator: Pick<Profile, 'id' | 'display_name'> | null
 }
 
+// Row/Insert/Update shapes for each table
+export type BoardRow = Board & { [key: string]: unknown }
+export type BoardInsert = Omit<Board, 'id' | 'invite_token' | 'created_at'> & { [key: string]: unknown }
+export type BoardUpdate = Partial<Board> & { [key: string]: unknown }
+
+export type ProfileRow = Profile & { [key: string]: unknown }
+export type ProfileInsert = Omit<Profile, 'created_at' | 'role' | 'points'> & { role?: Role; points?: number } & { [key: string]: unknown }
+export type ProfileUpdate = Partial<Profile> & { [key: string]: unknown }
+
+export type TaskRow = Task & { [key: string]: unknown }
+export type TaskInsert = Omit<Task, 'id' | 'created_at' | 'updated_at'> & { [key: string]: unknown }
+export type TaskUpdate = Partial<Task> & { [key: string]: unknown }
+
+export type PointEventRow = PointEvent & { [key: string]: unknown }
+export type PointEventInsert = Omit<PointEvent, 'id' | 'created_at'> & { [key: string]: unknown }
+export type PointEventUpdate = Partial<PointEvent> & { [key: string]: unknown }
+
 export interface Database {
   public: {
+    Views: Record<string, { Row: Record<string, unknown>; Relationships: [] }>
     Tables: {
-      boards: { Row: Board; Insert: Omit<Board, 'id' | 'invite_token' | 'created_at'>; Update: Partial<Board> }
-      profiles: { Row: Profile; Insert: Omit<Profile, 'created_at'>; Update: Partial<Profile> }
-      tasks: { Row: Task; Insert: Omit<Task, 'id' | 'created_at' | 'updated_at'>; Update: Partial<Task> }
-      point_events: { Row: PointEvent; Insert: Omit<PointEvent, 'id' | 'created_at'>; Update: never }
+      boards: { Row: BoardRow; Insert: BoardInsert; Update: BoardUpdate; Relationships: [] }
+      profiles: { Row: ProfileRow; Insert: ProfileInsert; Update: ProfileUpdate; Relationships: [] }
+      tasks: { Row: TaskRow; Insert: TaskInsert; Update: TaskUpdate; Relationships: [] }
+      point_events: { Row: PointEventRow; Insert: PointEventInsert; Update: PointEventUpdate; Relationships: [] }
     }
     Functions: {
-      claim_task: { Args: { p_task_id: string; p_user_id: string }; Returns: Task }
-      release_task: { Args: { p_task_id: string; p_user_id: string }; Returns: Task }
-      increment_points: { Args: { user_id: string; amount: number }; Returns: number }
+      claim_task: { Args: { p_task_id: string; p_user_id: string } & { [key: string]: unknown }; Returns: unknown }
+      release_task: { Args: { p_task_id: string; p_user_id: string } & { [key: string]: unknown }; Returns: unknown }
+      increment_points: { Args: { user_id: string; amount: number } & { [key: string]: unknown }; Returns: unknown }
     }
   }
 }
