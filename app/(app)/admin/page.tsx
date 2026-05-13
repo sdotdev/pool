@@ -3,6 +3,9 @@ import { getCurrentProfile } from '@/lib/dal'
 import { redirect } from 'next/navigation'
 import { InvitePanel } from '@/components/invite-panel'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = { title: 'Admin' }
 
 export default async function AdminPage() {
   const profile = await getCurrentProfile()
@@ -11,7 +14,7 @@ export default async function AdminPage() {
   const supabase = await createClient()
   const { data: board } = await supabase
     .from('boards')
-    .select('invite_token, name')
+    .select('join_code, name')
     .eq('id', profile.board_id!)
     .single()
 
@@ -27,7 +30,7 @@ export default async function AdminPage() {
         </CardHeader>
         <CardContent>
           <InvitePanel
-            inviteToken={board.invite_token}
+            joinCode={board.join_code}
             appUrl={process.env.NEXT_PUBLIC_APP_URL!}
           />
         </CardContent>

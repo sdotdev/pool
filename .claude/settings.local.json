@@ -18,7 +18,14 @@
       "mcp__claude_ai_Supabase__create_project",
       "mcp__claude_ai_Supabase__get_project_url",
       "mcp__claude_ai_Supabase__get_publishable_keys",
-      "mcp__claude_ai_Supabase__apply_migration"
+      "mcp__claude_ai_Supabase__apply_migration",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "mcp__claude_ai_Supabase__get_logs",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Public\\\\_sites\\\\2026\\\\2026.15\" -Recurse -Force)",
+      "Bash(Select-Object -First 50)",
+      "Bash(npm install *)",
+      "Bash(npx shadcn@latest add alert-dialog --yes)"
     ]
   }
 }

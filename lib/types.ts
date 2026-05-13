@@ -6,6 +6,7 @@ export interface Board {
   id: string
   name: string
   invite_token: string
+  join_code: string
   created_at: string
 }
 

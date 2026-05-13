@@ -67,7 +67,7 @@ export default function DemoBoardPage() {
 
       <div className="flex gap-4 overflow-x-auto pb-4 items-start">
         {/* Pool column — wider */}
-        <KanbanColumn title="Pool" count={poolTasks.length + teamInProgress.length} className="min-w-[340px] w-96">
+        <KanbanColumn id="pool" title="Pool" count={poolTasks.length + teamInProgress.length} className="min-w-[340px] w-96">
           {poolTasks.map(task => (
             <KanbanCard
               key={task.id}
@@ -92,7 +92,7 @@ export default function DemoBoardPage() {
         </KanbanColumn>
 
         {/* To Do */}
-        <KanbanColumn title="To Do" count={todoTasks.length}>
+        <KanbanColumn id="todo" title="To Do" count={todoTasks.length}>
           {todoTasks.map(task => (
             <KanbanCard
               key={task.id}
@@ -105,7 +105,7 @@ export default function DemoBoardPage() {
         </KanbanColumn>
 
         {/* Doing */}
-        <KanbanColumn title="Doing" count={doingTasks.length}>
+        <KanbanColumn id="doing" title="Doing" count={doingTasks.length}>
           {doingTasks.map(task => (
             <KanbanCard
               key={task.id}
@@ -118,7 +118,7 @@ export default function DemoBoardPage() {
         </KanbanColumn>
 
         {/* Review */}
-        <KanbanColumn title="Review" count={reviewTasks.length}>
+        <KanbanColumn id="review" title="Review" count={reviewTasks.length}>
           {reviewTasks.map(task => (
             <KanbanCard
               key={task.id}

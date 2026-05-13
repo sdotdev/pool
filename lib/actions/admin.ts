@@ -5,7 +5,7 @@ import { getCurrentProfile } from '@/lib/dal'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-export async function joinBoard(token: string) {
+export async function joinBoard(code: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('unauthenticated')
@@ -13,10 +13,10 @@ export async function joinBoard(token: string) {
   const { data: board } = await supabase
     .from('boards')
     .select('id')
-    .eq('invite_token', token)
+    .eq('join_code', code.trim().toUpperCase())
     .single()
 
-  if (!board) throw new Error('invalid_token')
+  if (!board) throw new Error('invalid_code')
 
   const { error } = await supabase
     .from('profiles')
@@ -28,7 +28,7 @@ export async function joinBoard(token: string) {
   redirect('/board')
 }
 
-export async function rotateInviteToken() {
+export async function rotateJoinCode() {
   const profile = await getCurrentProfile()
   if (profile.role !== 'admin') throw new Error('forbidden')
 
@@ -37,12 +37,12 @@ export async function rotateInviteToken() {
     .from('boards')
     .update({ invite_token: crypto.randomUUID() })
     .eq('id', profile.board_id!)
-    .select('invite_token')
+    .select('join_code')
     .single()
 
   if (error) throw new Error('rotate_failed')
   revalidatePath('/admin')
-  return data.invite_token
+  return data.join_code
 }
 
 export async function createBoard(name: string) {
@@ -61,17 +61,20 @@ export async function createBoard(name: string) {
 
   if (existing?.board_id) redirect('/board')
 
-  const { data: board, error: boardError } = await supabase
-    .from('boards')
-    .insert({ name: name.trim() })
-    .select()
-    .single()
+  const boardId = crypto.randomUUID()
+  const joinCode = Array.from({ length: 6 }, () =>
+    'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]
+  ).join('')
 
-  if (boardError || !board) throw new Error('board_create_failed')
+  const { error: boardError } = await supabase
+    .from('boards')
+    .insert({ id: boardId, name: name.trim(), join_code: joinCode })
+
+  if (boardError) throw new Error('board_create_failed')
 
   const { error: profileError } = await supabase
     .from('profiles')
-    .update({ board_id: board.id, role: 'admin' })
+    .update({ board_id: boardId, role: 'admin' })
     .eq('id', user.id)
 
   if (profileError) throw new Error('board_create_failed')

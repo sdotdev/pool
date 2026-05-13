@@ -1,3 +1,7 @@
+'use client'
+
+import { useDraggable } from '@dnd-kit/core'
+import { CSS } from '@dnd-kit/utilities'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -11,7 +15,6 @@ export interface KanbanCardProps {
   onAdvance?: () => void
   onRelease?: () => void
   pending?: boolean
-  /** When true, renders as a read-only team card (greyed out, no actions) */
   teamOnly?: boolean
 }
 
@@ -31,18 +34,27 @@ export function KanbanCard({ task, currentProfile, onClaim, onAdvance, onRelease
   const isOwner = task.owner_id === currentProfile.id
   const isCoordinator = currentProfile.role === 'coordinator' || currentProfile.role === 'admin'
 
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: task.id,
+    disabled: !!teamOnly,
+  })
+
+  const style = transform ? { transform: CSS.Translate.toString(transform) } : undefined
+
   return (
-    <Card className={`shadow-none ${teamOnly ? 'opacity-60' : ''}`}>
+    <Card
+      ref={setNodeRef}
+      style={style}
+      className={`shadow-none touch-none select-none ${teamOnly ? 'opacity-60' : ''} ${isDragging ? 'opacity-40 cursor-grabbing' : 'cursor-grab'}`}
+      {...(!teamOnly ? { ...listeners, ...attributes } : {})}
+    >
       <CardContent className="p-3 space-y-2">
-        {/* Title */}
         <p className="font-medium text-sm leading-snug">{task.title}</p>
 
-        {/* Description */}
         {task.description && (
           <p className="text-xs text-muted-foreground line-clamp-2">{task.description}</p>
         )}
 
-        {/* Badges row */}
         <div className="flex flex-wrap gap-1 items-center">
           <Badge variant="outline" className={`text-xs ${difficultyColor[task.difficulty]}`}>
             {task.difficulty} · {task.points}pts
@@ -52,7 +64,6 @@ export function KanbanCard({ task, currentProfile, onClaim, onAdvance, onRelease
           ))}
         </div>
 
-        {/* Status */}
         <div className="flex items-center gap-2">
           <StatusBadge status={task.status} />
           {task.owner && (
@@ -60,14 +71,15 @@ export function KanbanCard({ task, currentProfile, onClaim, onAdvance, onRelease
           )}
         </div>
 
-        {/* Blocked reason */}
         {task.blocked_reason && (
           <p className="text-xs text-destructive">{task.blocked_reason}</p>
         )}
 
-        {/* Actions */}
         {!teamOnly && (
-          <div className="flex gap-1 pt-1 flex-wrap">
+          <div
+            className="flex gap-1 pt-1 flex-wrap"
+            onPointerDown={e => e.stopPropagation()}
+          >
             {task.status === 'open' && onClaim && (
               <Button size="sm" className="h-7 text-xs" onClick={onClaim} disabled={pending}>
                 Claim

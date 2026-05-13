@@ -2,6 +2,9 @@ import { createClient } from '@/lib/supabase/server'
 import { getCurrentProfile } from '@/lib/dal'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import type { Profile } from '@/lib/types'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = { title: 'Leaderboard' }
 
 export default async function LeaderboardPage() {
   const profile = await getCurrentProfile()

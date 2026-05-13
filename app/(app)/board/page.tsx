@@ -3,6 +3,9 @@ import { getCurrentProfile } from '@/lib/dal'
 import { BoardKanban } from '@/components/board-kanban'
 import { BoardRealtime } from '@/components/board-realtime'
 import type { TaskWithOwner } from '@/lib/types'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = { title: 'Board' }
 
 export default async function BoardPage() {
   const profile = await getCurrentProfile()

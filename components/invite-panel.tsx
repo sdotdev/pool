@@ -3,15 +3,15 @@
 import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { rotateInviteToken } from '@/lib/actions/admin'
+import { rotateJoinCode } from '@/lib/actions/admin'
 
-export function InvitePanel({ inviteToken, appUrl }: { inviteToken: string; appUrl: string }) {
-  const [token, setToken] = useState(inviteToken)
+export function InvitePanel({ joinCode, appUrl }: { joinCode: string; appUrl: string }) {
+  const [code, setCode] = useState(joinCode)
   const [copied, setCopied] = useState(false)
   const [rotateError, setRotateError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
-  const inviteUrl = `${appUrl}/join?token=${token}`
+  const inviteUrl = `${appUrl}/join?code=${code}`
 
   const copy = () => {
     navigator.clipboard.writeText(inviteUrl)
@@ -23,30 +23,34 @@ export function InvitePanel({ inviteToken, appUrl }: { inviteToken: string; appU
     setRotateError(null)
     startTransition(async () => {
       try {
-        const newToken = await rotateInviteToken()
-        if (newToken) setToken(newToken)
+        const newCode = await rotateJoinCode()
+        if (newCode) setCode(newCode)
       } catch {
-        setRotateError('Failed to rotate link. Please try again.')
+        setRotateError('Failed to rotate code. Please try again.')
       }
     })
   }
 
   return (
     <div className="space-y-3">
+      <div>
+        <p className="text-xs text-muted-foreground mb-1">Join code</p>
+        <p className="text-2xl font-mono font-bold tracking-widest">{code}</p>
+      </div>
       <div className="flex gap-2">
         <Input value={inviteUrl} readOnly className="text-xs font-mono" />
         <Button size="sm" variant="outline" onClick={copy}>
-          {copied ? 'Copied!' : 'Copy'}
+          {copied ? 'Copied!' : 'Copy link'}
         </Button>
       </div>
       <Button size="sm" variant="ghost" onClick={rotate} disabled={pending}>
-        {pending ? 'Rotating…' : 'Generate new link'}
+        {pending ? 'Rotating…' : 'Generate new code'}
       </Button>
       {rotateError && (
         <p className="text-xs text-destructive">{rotateError}</p>
       )}
       <p className="text-xs text-muted-foreground">
-        Anyone with this link can join the board. Rotate it to invalidate the old link.
+        Members can join at <span className="font-mono">/join</span> by typing the code or using the link. Rotate to invalidate the old one.
       </p>
     </div>
   )
